@@ -1,11 +1,5 @@
 <div style="text-align: center;">
-<pre style="
-        background: transparent; 
-        border: none; 
-        font-family: monospace; 
-        display: inline-block; 
-        text-align: left; 
-        color: inherit;">
+<pre style="font-family: monospace; display: inline-block; text-align: left;">
 ███████╗  ██████╗  ██████╗  ██████╗  ██╗   ██╗
 ██╔════╝ ██╔═══██╗ ██╔══██╗ ██╔══██╗ ██║   ██║
 ███████╗ ████████║ ██████╔╝ ██████╔╝ ██║   ██║
@@ -15,70 +9,40 @@
 </pre>
 </div>
 
-<h1 align="center"> (Simple As Possible Processing Unit) </h1>
+<h1 align="center">Simple As Possible Processing Unit</h1>
 
-<h3 align="center">This is not a high-level emulator, every component is explicitly modeled to simulate real hardware behavior.</h3>
+<h3 align="center"><i>A gate-level digital logic simulator of an 8-bit CPU architecture.</i></h3>
+
+<p align="center"><b>No high-level emulation.</b> Every wire, gate, flip-flop, and bus line is explicitly modeled to simulate real hardware behavior.</p>
 
 ![Example](assets/example.gif)
 
-## 🎯 Purpose
+## Why I built this
 
-SAPPU is designed to help you learn **both C programming and computer architecture** simultaneously:
+I built Sappu to bridge the gap between high-level programming and physical hardware. 
 
-- **C Programming**: Structs, pointers, bitwise operations, modular design
-- **Digital Logic**: Gates, flip-flops, registers, tri-state buffers
-- **CPU Architecture**: Fetch-execute cycle, control signals, bus architecture
-- **Assembly Language**: Writing and understanding low-level instructions
+Many emulators simulate behavior (e.g., `acc += val`). Sappu simulates the **electricity**. The entire CPU is built on top of just two C primitives: `NAND` and `NOT`. From there, I implemented gates, then components, then the bus.
 
-## 📑 Index
+It serves as a **readable reference implementation** for anyone who wants to see how:
+- **C Pointers** can model hardware buses.
+- **Bitwise operations** create logic gates.
+- **Control Signals** physically drive the fetch-execute cycle.
 
-- [Architecture Overview](#-architecture-overview)
-- [Instruction Set](#-instruction-set)
-- [Writing Programs](#-writing-programs)
-- [Building](#-building)
-- [Running](#-usage)
-- [Project Structure](#-project-structure)
-- [Microcode (Fetch-Execute Cycle)](#microcode-fetch-execute-cycle)
-- [Control Signals Reference](#-control-signals-reference)
-- [Learning Resources](#-learning-resources)
+## Index
 
-## 🏗️ Architecture Overview
+- [Architecture](#architecture)
+- [Instruction Set](#instruction-set)
+- [Writing Programs](#writing-programs)
+- [Building & Running](#building--running)
+- [Project Structure](#project-structure)
+- [Microcode](#microcode-fetch-execute-cycle)
+- [Control Signals](#control-signals-reference)
 
-<div style="text-align: center;">
-<pre style="
-        background: transparent; 
-        border: none; 
-        font-family: monospace; 
-        display: inline-block; 
-        text-align: left; 
-        color: inherit;">
-                    ┌─────────┐             ┌───┐
-      ┌────────────▶│   ALU   │◀────────────│ B │
-      │             │   +/-   │             └─┬─┘
-      │             └────┬────┘               ▲
-      │                  │                    │
-    ┌─▼─┐                │                    │
-    │ACC│                │                    │
-    └─┬─┘                │                    │
-      ▲                  │                    │
-      │                  │                    │
-┌─────▼──────────────────▼────────────────────▼──────────────────┐
-│                        8-BIT BUS                               │
-└─────┬────────┬─────────┬──────────┬──────────────────┬─────────┘
-      │        │         │          │                  │
-      │        │         │          │                  │
-    ┌─▼─┐    ┌─▼─┐     ┌─▼─┐      ┌─▼─┐              ┌─▼─┐
-    │PC │    │MAR│────▶│RAM│      │IR │              │OUT│
-    └───┘    └───┘     └───┘      └─┬─┘              └───┘
-      ▲                             │
-      │                             │
-      │                             ▼
-      │                       ┌──────────┐
-      │                       │ CONTROL  │
-      └───────────────────────│   UNIT   │
-                              └──────────┘
-</pre>
-</div>
+## Architecture
+
+The architecture is based on the SAP-1 (Simple As Possible) computer.
+
+![Example](assets/scheme.png)
 
 ### Components
 
@@ -94,7 +58,7 @@ SAPPU is designed to help you learn **both C programming and computer architectu
 | **OUT** | Output Register - displays results |
 | **Control Unit** | Generates control signals based on instruction |
 
-## 📋 Instruction Set
+## Instruction Set
 
 | Mnemonic | Opcode | Format | Description |
 |----------|--------|--------|-------------|
@@ -103,12 +67,10 @@ SAPPU is designed to help you learn **both C programming and computer architectu
 | `SUB` | `0010` | `SUB addr` | Subtract RAM[addr] from Accumulator |
 | `OUT` | `1110` | `OUT` | Output Accumulator value to display |
 | `HLT` | `1111` | `HLT` | Halt the CPU |
-|Others yet to come...! |
 
+## Writing Programs
 
-## 📝 Writing Programs
-
-**RAM is 8 bytes (addresses 0-7).** Each line in your assembly file corresponds to a RAM address. Use `DAT` to store data values at specific addresses.
+RAM is **8 bytes** (addresses 0-7). Each line in your assembly file corresponds to a RAM address. Use `DAT` to store data values.
 
 ```asm
 # Address | Instruction
@@ -120,118 +82,61 @@ SAPPU is designed to help you learn **both C programming and computer architectu
 # 4       |             # Unused padding
 # 5       | DAT 10      # First number (10)
 # 6       | DAT 4       # Second number (4)
+
 ```
 
-### Instruction Format
-
-Each instruction is 8 bits:
-```
-┌───────────────┬───────────────┐
-│   OPCODE      │   OPERAND     │
-│   (4 bits)    │   (4 bits)    │
-└───────────────┴───────────────┘
-     7 6 5 4         3 2 1 0
-```
-
-## 🛠️ Building
+## Building & Running
 
 ```bash
-# Builds machine and assembler
+# Build
 make
-```
 
-## 🚀 Usage
-
-### Quick Start
-
-```bash
-# Assemble and run in one command
-./sap src/program.asm
-
-# With auto mode (runs at 2 Hz by default)
+# Quick start (auto-run mode)
 ./sap src/program.asm -auto
 
-# With custom clock speed (10 Hz)
-./sap src/program.asm -auto 10
-```
-
-### Manual Steps
-
-```bash
-# 1. Assemble your program
+# Manual stepping (useful for debugging)
 ./assembler src/program.asm
-
-# 2. Run the simulator
-./run ram.bin           # Manual mode (press Enter to step)
-./run ram.bin -auto     # Auto mode at default Hz
-./run ram.bin -auto 5   # Auto mode at 5 Hz
-```
-
-
-## 📁 Project Structure
+./run ram.bin
 
 ```
-SAPPU/
-├── Makefile            # Build configuration
-├── sap                 # Assemble & run script
-├── README.md           # This file
-└── src/
-    ├── gates.c/h       # Logic gates (AND, OR, NOT, XOR, etc.)
-    ├── memory.c/h      # Registers, RAM, flip-flops
-    ├── alu.c/h         # Arithmetic Logic Unit
-    ├── control.c/h     # Control unit & signal generation
-    ├── computer.c/h    # Main computer integration
-    ├── test.c          # Simulator with visualization
-    ├── assembler.c     # Assembly to binary converter
-    └── loader.c        # Binary file inspector
+
+## Project Structure
+
+I've organized the code to separate the abstraction layers:
+
+```
+src/
+├── gates.c       # The physics: AND, OR, NOT, XOR implementation
+├── alu.c         # The math: Adder/Subtractor built from gates
+├── memory.c      # The storage: Flip-flops and Registers
+├── control.c     # The brain: Signal generation
+├── computer.c    # The motherboard: Wiring it all together
+└── assembler.c   # The tool: Assembly to binary converter
+
 ```
 
 ## Microcode (Fetch-Execute Cycle)
 
-### Fetch Phase (same for all instructions):
+### Fetch Phase
+
 | Step | Signals | Action |
-|------|---------|--------|
+| --- | --- | --- |
 | T1 | `CO MI` | PC → Bus → MAR |
 | T2 | `RO II` | RAM[MAR] → Bus → IR |
 | T3 | `CE` | PC++ |
 
-### Execute Phase (instruction-specific):
+### Execute Phase (Example: ADD)
 
-**LDA** (Load Accumulator):
 | Step | Signals | Action |
-|------|---------|--------|
-| T4 | `IO MI` | IR[3:0] → Bus → MAR |
-| T5 | `RO AI` | RAM[MAR] → Bus → ACC |
-
-**ADD** (Add to Accumulator):
-| Step | Signals | Action |
-|------|---------|--------|
+| --- | --- | --- |
 | T4 | `IO MI` | IR[3:0] → Bus → MAR |
 | T5 | `RO BI` | RAM[MAR] → Bus → B |
 | T6 | `EO AI` | ALU(ACC+B) → Bus → ACC |
 
-**SUB** (Subtract from Accumulator):
-| Step | Signals | Action |
-|------|---------|--------|
-| T4 | `IO MI` | IR[3:0] → Bus → MAR |
-| T5 | `RO BI` | RAM[MAR] → Bus → B |
-| T6 | `EO AI SU` | ALU(ACC-B) → Bus → ACC |
-
-**OUT** (Output):
-| Step | Signals | Action |
-|------|---------|--------|
-| T4 | `AO OI` | ACC → Bus → OUT |
-
-**HLT** (Halt):
-| Step | Signals | Action |
-|------|---------|--------|
-| T4 | `HLT` | Stop clock |
-
-
-## 🔌 Control Signals Reference
+## Control Signals Reference
 
 | Signal | Name | Description |
-|--------|------|-------------|
+| --- | --- | --- |
 | `CO` | Counter Out | PC outputs to bus |
 | `CE` | Counter Enable | Increment PC |
 | `MI` | MAR In | Load MAR from bus |
@@ -246,14 +151,13 @@ SAPPU/
 | `OI` | Output In | Load OUT from bus |
 | `HLT` | Halt | Stop execution |
 
-## 🎓 Learning Resources
+## Learning Resources
 
-This project is inspired by:
-- **SAP-1** architecture from "Digital Computer Electronics" by Malvino & Brown
-- **Ben Eater's** 8-bit breadboard computer series
+Inspired by:
 
-## 📜 License
+* **"Digital Computer Electronics"** by Malvino & Brown (The SAP-1 architecture)
+* **Ben Eater** (8-bit breadboard computer series)
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## License
 
-Copyright (c) 2026 Matteo Tacconi (teotexeplus@gmail.com)
+MIT License. Copyright (c) 2026 Matteo Tacconi.
