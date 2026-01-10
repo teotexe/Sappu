@@ -23,7 +23,7 @@
 
 ## 🎯 Purpose
 
-SAPPU is designed to help you learn **both C programming and computer architecture** simultaneously:
+SAPPU is designed to be a readable reference implementation for learning **both C programming and computer architecture** simultaneously:
 
 - **C Programming**: Structs, pointers, bitwise operations, modular design
 - **Digital Logic**: Gates, flip-flops, registers, tri-state buffers
