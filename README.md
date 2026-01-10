@@ -17,9 +17,9 @@
 
 <h1 align="center"> (Simple As Possible Processing Unit) </h1>
 
-<h3 align="center"><i>A gate-level digital logic simulator of an 8-bit CPU architecture implemented in C.</i></h3>
+<h3 align="center">This is not a high-level emulator, every component is explicitly modeled to simulate real hardware behavior.</h3>
 
-<p align="center">This is not a high-level emulator, every wire, gate, flip-flop, and bus line is explicitly modeled to simulate real hardware behavior.</p>
+![Example](assets/example.gif)
 
 ## 🎯 Purpose
 
