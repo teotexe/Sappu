@@ -1,0 +1,48 @@
+# Compiled object files
+*.o
+*.obj
+
+# Executables
+*.out
+*.exe
+assembler/assembler
+computer/computer
+sap/sap
+
+# Libraries
+*.a
+*.so
+*.lib
+*.dll
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Precompiled headers
+*.gch
+*.pch
+
+# Editor/IDE files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.sublime-*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+
+# Build directories
+build/
+bin/
+obj/

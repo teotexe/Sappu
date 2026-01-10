@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# SAP-1 Assembler and Runner Script
+# Usage: ./sap <program.asm> [run options]
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <program.asm> [options]"
+    echo "Options are passed to the simulator:"
+    echo "  -auto [hz]  Auto mode with optional clock speed"
+    echo "  -man        Manual mode (default)"
+    exit 1
+fi
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ASM_FILE="$1"
+shift  # Remove first argument, keep the rest for run
+
+# Check if source file exists
+if [ ! -f "$ASM_FILE" ]; then
+    echo "Error: File '$ASM_FILE' not found"
+    exit 1
+fi
+
+# Assemble
+echo "Assembling $ASM_FILE..."
+"$SCRIPT_DIR/assembler" "$ASM_FILE"
+
+if [ $? -ne 0 ]; then
+    echo "Assembly failed!"
+    exit 1
+fi
+
+# Wait for user
+read -p "Press Enter to run..."
+
+# Run
+echo "Running..."
+"$SCRIPT_DIR/computer" ram.bin "$@"
