@@ -160,4 +160,4 @@ Inspired by:
 
 ## License
 
-MIT License. Copyright (c) 2026 Matteo Tacconi.
+MIT License. Copyright (c) 2026 Matteo Tacconi (teotexeplus@gmail.com)
