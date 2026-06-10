@@ -17,16 +17,18 @@
 
 ![Example](assets/example.gif)
 
-## Why I built this
 
-I built Sappu to bridge the gap between high-level programming and physical hardware. 
+I built Sappu to get a deeper understanding of physical hardware. 
 
-Many emulators simulate behavior (e.g., `acc += val`). Sappu simulates the **electricity**. The entire CPU is built on top of just two C primitives: `NAND` and `NOT`. From there, I implemented gates, then components, then the bus.
+Many emulators simulate behavior (e.g., `acc += val`). 
+Sappu simulates the **electricity**. The entire CPU is built on top of just two C primitives: `NAND` and `NOT`. 
+From there, I implemented gates, then components, then the bus...
 
-It serves as a **readable reference implementation** for anyone who wants to see how:
-- **C Pointers** can model hardware buses.
-- **Bitwise operations** create logic gates.
-- **Control Signals** physically drive the fetch-execute cycle.
+The choice of C was purely for its simplicity and semantic flexibility.
+
+> [!NOTE]
+> I made use of LLMs in order to have a deeper understanding of the architecture
+> but the code was intentionally written by hand. 
 
 ## Index
 
